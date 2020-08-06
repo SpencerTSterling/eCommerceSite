@@ -23,9 +23,9 @@
             @foreach(Product p in Model)
             {
                 <tr>
-                    <td>@p.Title</td>
+                    <td>@Html.DisplayFor( m => p.Title)</td>
                     <td>@Html.DisplayFor( m => p.Price)</td>
-                    <td>@p.Category</td>
+                    <td>@Html.DisplayFor( m => p.Category)</td>
                     <td>
                         <a class="btn btn-secondary" href="">Edit</a>
                         <a class="btn btn-danger" href="">Delete</a>
