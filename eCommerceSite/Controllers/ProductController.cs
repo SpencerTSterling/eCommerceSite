@@ -27,12 +27,20 @@ namespace eCommerceSite.Controllers
             int pageNum = id ?? 1;
             const int PageSize = 3;
 
+            int numProducts = await (from p in _context.Products
+                                     select p).CountAsync();
+
+            int totalPages = (int)Math.Ceiling( (double)numProducts / PageSize );
+
+            ViewData["MaxPage"] = totalPages;
+            ViewData["CurrentPage"] = pageNum;
+
             //Get all products out of database
-            List<Product> products =
+            List < Product > products =
                 await (from p in _context.Products
                        orderby p.Title ascending
                        select p)
-                       .Skip(PageSize * (pageNum - 1 )) // skip must be before take
+                       .Skip(PageSize * (pageNum - 1)) // skip must be before take
                        .Take(PageSize)
                        .ToListAsync();
 
