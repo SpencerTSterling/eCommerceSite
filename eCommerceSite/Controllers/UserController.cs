@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using eCommerceSite.Data;
 using eCommerceSite.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
@@ -49,6 +50,11 @@ namespace eCommerceSite.Controllers
 
         public IActionResult Login()
         {
+            //check if user is already logged in
+            if (HttpContext.Session.GetInt32("UserId").HasValue)
+            {
+                return RedirectToAction("Index", "Home");
+            }
             return View();
         }
 
@@ -74,6 +80,9 @@ namespace eCommerceSite.Controllers
                 ModelState.AddModelError(string.Empty, "Credentials were not found");
                 return View(login);
             }
+
+            // log user into website
+            HttpContext.Session.SetInt32("UserId", acc.UserId);
 
             return RedirectToAction("Index", "Home");
         }
