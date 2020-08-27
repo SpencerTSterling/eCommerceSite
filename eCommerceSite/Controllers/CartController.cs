@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using eCommerceSite.Data;
 using eCommerceSite.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,9 +13,11 @@ namespace eCommerceSite.Controllers
     public class CartController : Controller
     {
         private readonly ProductContext _context;
-        public CartController(ProductContext context)
+        private readonly IHttpContextAccessor _httpContext;
+        public CartController(ProductContext context, IHttpContextAccessor httpContext)
         {
             _context = context;
+            _httpContext = httpContext;
         }
 
         /// <summary>
@@ -28,6 +31,7 @@ namespace eCommerceSite.Controllers
             Product p = await ProductDb.GetProductAsync(_context, id);
 
             // add product to cart cookie
+            _httpContext.HttpContext.Response.Cookies
 
             // redirect to previous page
             return View();
