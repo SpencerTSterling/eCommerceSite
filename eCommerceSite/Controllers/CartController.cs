@@ -7,6 +7,7 @@ using eCommerceSite.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 namespace eCommerceSite.Controllers
 {
@@ -31,10 +32,18 @@ namespace eCommerceSite.Controllers
             Product p = await ProductDb.GetProductAsync(_context, id);
 
             // add product to cart cookie
-            _httpContext.HttpContext.Response.Cookies
+            string data = JsonConvert.SerializeObject(p);
+            CookieOptions options = new CookieOptions()
+            {
+                Expires = DateTime.Now.AddYears(1),
+                Secure = true,
+                IsEssential = true
+            };
+
+            _httpContext.HttpContext.Response.Cookies.Append("CartCookie", data, options);
 
             // redirect to previous page
-            return View();
+            return RedirectToAction("Index", "Product");
         }
 
         public IActionResult Summary()
