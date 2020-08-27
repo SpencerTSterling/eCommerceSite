@@ -63,6 +63,9 @@ namespace eCommerceSite.Controllers
                 // add to database
                 _context.UserAccounts.Add(acc);
                 await _context.SaveChangesAsync();
+
+                LogUserIn(acc.UserId);
+
                 //redirect to home page
                 return RedirectToAction("Index", "Home");
             }
@@ -89,24 +92,29 @@ namespace eCommerceSite.Controllers
             }
 
             UserAccount acc =
-            await      (from u in _context.UserAccounts
-                        where (u.Username == login.UsernameOrEmail
-                            || u.Email == login.UsernameOrEmail)
-                            && u.Password == login.Password
-                       select u).SingleOrDefaultAsync();
+            await (from u in _context.UserAccounts
+                   where (u.Username == login.UsernameOrEmail
+                       || u.Email == login.UsernameOrEmail)
+                       && u.Password == login.Password
+                   select u).SingleOrDefaultAsync();
 
-            if ( acc == null)
+            if (acc == null)
             {
                 // credentials did not match
                 // custom error message
                 ModelState.AddModelError(string.Empty, "Credentials were not found");
                 return View(login);
             }
-
-            // log user into website
-            HttpContext.Session.SetInt32("UserId", acc.UserId);
+            LogUserIn(acc.UserId);
 
             return RedirectToAction("Index", "Home");
+        }
+
+        private void LogUserIn(int accId)
+        {
+
+            // log user into website
+            HttpContext.Session.SetInt32("UserId", accId);
         }
 
         public IActionResult Logout()
