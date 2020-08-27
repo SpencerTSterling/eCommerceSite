@@ -71,12 +71,12 @@ namespace eCommerceSite.Data
         /// <param name="_context"></param>
         /// <param name="id">ProductId of the product being deleted</param>
         /// <returns></returns>
-        public async static Task<Product> SelectProductAsync(ProductContext _context, int id)
+        public async static Task<Product> GetProductAsync(ProductContext _context, int id)
         {
             Product p =
                 await (from prod in _context.Products
-                where prod.ProductId == id
-                select prod).SingleAsync();
+                       where prod.ProductId == id
+                       select prod).SingleAsync();
             return p;
         }
 
