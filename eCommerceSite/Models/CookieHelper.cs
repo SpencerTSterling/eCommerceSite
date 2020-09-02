@@ -52,9 +52,10 @@ namespace eCommerceSite.Models
             http.HttpContext.Response.Cookies.Append(CartCookie, data, options);
         }
 
-        public static int GetTotalCartProducts(HttpContextAccessor http)
+        public static int GetTotalCartProducts(IHttpContextAccessor http)
         {
-            throw new  NotImplementedException();
+            List<Product> cartProducts = GetCartProducts(http);
+            return cartProducts.Count;
         }
     }
 }
