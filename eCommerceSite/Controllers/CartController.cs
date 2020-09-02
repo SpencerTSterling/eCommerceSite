@@ -26,15 +26,17 @@ namespace eCommerceSite.Controllers
         /// </summary>
         /// <param name="id">ProductId</param>
         /// <returns></returns>
-        public async Task<IActionResult> Add(int id) // id of product to add
+        public async Task<IActionResult> Add(int id, string prevUrl) // id of product to add, previous url
         {
             // get product from data base
             Product p = await ProductDb.GetProductAsync(_context, id);
 
             CookieHelper.AddProductToCart((HttpContextAccessor)_httpContext, p);
 
+            TempData["Message"] = p.Title + " added successfully";
+
             // redirect to previous page
-            return RedirectToAction("Index", "Product");
+            return Redirect(prevUrl);
         }
 
         public IActionResult Summary()
